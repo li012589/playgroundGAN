@@ -59,13 +59,14 @@ def generator(z,batchSize, zDim):
     conv1 = tf.nn.conv2d(fc1, wConv1, strides = [1,2,2,1], padding = 'SAME') + bConv1
     conv1 = tf.contrib.layers.batch_norm(conv1,epsilon = 1e-5)
     conv1 = tf.nn.relu(conv1)
-    conv1 = tf.image.resize_images(conv1, [56, 56])#tf.reshape(conv1,[-1,56,56,-1])
-    print conv1.shape
+    conv1 = tf.image.resize_images(conv1, [56, 56]) #Unpooling -transposed 2*2 avg_pooling
+    #conv1 = tf.reshape(conv1,[-1,56,56,-1])
 
     conv2 = tf.nn.conv2d(conv1, wConv2, strides = [1,2,2,1], padding = 'SAME') + bConv2
     conv2 = tf.contrib.layers.batch_norm(conv2,epsilon = 1e-5)
     conv2 = tf.nn.relu(conv2)
-    conv2 = tf.reshape(conv2, [-1,56,56])
+    #conv2 = tf.reshape(conv2, [-1,56,56])
+    conv2 = tf.image.resize_images(conv2, [56, 56])
 
     conv3 = tf.nn.conv2d(conv2, wConv3, strides = [1,2,2,1], padding = 'SAME') + bConv3
     conv3 = tf.sigmoid(conv3)
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     image = mnist.train.next_batch(1)[0].reshape([1,28,28,1])
     #print image.shape
     z = tf.placeholder(tf.float32,[None,100])
-    #G = generator(z,3,100)
+    G = generator(z,3,100)
     img = tf.placeholder(tf.float32,[None,28,28,1])
     D = discriminator(img)
     sess = tf.InteractiveSession()
