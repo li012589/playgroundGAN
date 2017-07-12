@@ -12,8 +12,10 @@ D_LEARNING_RATE = 0.0003
 
 PRE_TRAIN_D = 3#300
 TRIAN_TIMES = 10#1000000
-
 BATCH_SIZE = 50
+
+TF_SAVE_DIR = './TF_SAVE_DIR'
+PIC_SAVE_DIR = './PIC_SAVE_DIR'
 
 def main():
     mnist = input_data.read_data_sets("MNIST/")
