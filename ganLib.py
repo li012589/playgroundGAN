@@ -76,12 +76,25 @@ def generator(z, zDim):
 class GAN:
     def __init__(self,sess,IMGsize,zSize):
         self.sess = sess
+
         self.d = tf.placeholder(tf.float32,[None,IMGsize[0],IMGsize[1],IMGsize[2]])
         self.z = tf.placeholder(tf.float32,[None,zSize])
         self.D = discriminator(self.d)
         self.discriminatorVar = tf.trainable_variables()
         self.G = generator(self.z,zSize)
         self.generatorVar = tf.trainable_variables()[len(self.discriminatorVar):]
+
+        self.trueSample = tf.placeholder(tf.float32, [None,IMGsize[0],IMGsize[1],IMGsize[2]])
+        self.lossTrue = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.trueSample, labels = tf.ones_like(self.trueSample)))
+
+        self.fakeSample = self.G
+        self.lossFake = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.fakeSample, labels = tf.zeros_like(self.fakeSample)))
+
+        self.lossG = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.fakeSample, labels = tf.ones_like(self.fakeSample)))
+
+        print self.lossTrue.shape
+        print self.lossFake.shape
+        print self.lossG.shape
 
     def init(self):
         self.sess.run(tf.global_variables_initializer())
