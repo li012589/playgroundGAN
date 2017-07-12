@@ -4,15 +4,15 @@ import matplotlib.pyplot as plt
 from tensorflow.examples.tutorials.mnist import input_data
 
 def weightVariable(name,shape):
-    initial = tf.get_variable(name,shape,initializer = tf.truncated_normal_initializer(stddev = 0.01))
-    return tf.Variable(initial)
+    initial = tf.get_variable(name,shape,dtype=tf.float32, initializer=tf.truncated_normal_initializer(stddev=0.02))
+    return initial
 
 def biasVariable(name,shape):
     initial = tf.get_variable(name,shape,initializer=tf.constant_initializer(0.01))
-    return tf.Variable(initial)
+    return initial
 
-def discriminator(image,reuse=None):
-    with tf.variable_scope("discriminator",reuse = reuse):
+def discriminator(image,reuseMark=None):
+    with tf.variable_scope("discriminator",reuse = reuseMark):
         wConv1 = weightVariable("wConv1",[5,5,1,32])
         bConv1 = biasVariable("bConv1",[32])
 
@@ -38,8 +38,8 @@ def discriminator(image,reuse=None):
         fc2 = tf.matmul(fc1,wFC2) + bFC2
     return fc2
 
-def generator(z, zDim,reuse = None):
-    with tf.variable_scope("generator",reuse = reuse):
+def generator(z, zDim,reuseMark = None):
+    with tf.variable_scope("generator",reuse = reuseMark):
         wFC1 = weightVariable("wFC1",[zDim, 3136])
         bFC1 = biasVariable("bFC1",[3136])
 
@@ -83,7 +83,7 @@ class GAN:
 
         self.batchSize = tf.placeholder(tf.int32)
         self.radomZ = tf.random_normal([self.batchSize,zSize],mean = 0,stddev= 1)
-        self.D = discriminator(self.d)
+        self.D = discriminator(self.d,None)
         self.discriminatorVar = tf.trainable_variables()
         #print self.discriminatorVar
         self.G = generator(self.radomZ,zSize)
@@ -95,9 +95,9 @@ class GAN:
         self.lossFake = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.DG, labels = tf.zeros_like(self.DG)))
         self.lossG = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.DG, labels = tf.ones_like(self.DG)))
 
-        self.dTrueOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossTrue, var_list = self.discriminatorVar)
-        self.dFakeOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossFake, var_list = self.discriminatorVar)
-        self.gOP = tf.train.AdamOptimizer(gLearningRate).minimize(self.lossG, var_list = self.generatorVar)
+        #self.dTrueOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossTrue, var_list = self.discriminatorVar)
+        #self.dFakeOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossFake, var_list = self.discriminatorVar)
+        #self.gOP = tf.train.AdamOptimizer(gLearningRate).minimize(self.lossG, var_list = self.generatorVar)
 
     def init(self):
         self.sess.run(tf.global_variables_initializer())
