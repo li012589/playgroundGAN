@@ -106,8 +106,8 @@ class GAN:
         return self.sess.run(self.G,feed_dict={self.batchSize:batchSize})
 
     def trainD(self,trueData,batchSize):
-        self.sess.run(self.dTrueOP,feed_dict={self.trueSample:trueData})
-        self.sess.run(self.dFakeOP,feed_dict={self.z:self.radomZ})
+        self.sess.run(self.dTrueOP,feed_dict={self.d:trueData})
+        self.sess.run(self.dFakeOP,feed_dict={self.batchSize:batchSize})
 
     def trainG(self,batchSize):
         self.sess.run(self.gOP,feed_dict={self.batchSize:batchSize})
@@ -125,6 +125,8 @@ if __name__ == "__main__":
     p1 = g[0,:,:,:].reshape([28,28])
     plt.imshow(p1)
     print d
+    gan.trainD(image,1)
+    gan.trainG(1)
     #images = sess.run()
     plt.show()
     while True:
