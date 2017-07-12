@@ -84,7 +84,10 @@ if __name__ == "__main__":
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
     d = sess.run(D,feed_dict={img:image})
-    #g = sess.run(G,feed_dict={z:tf.random_normal([3,100])})
+    tmp = sess.run(tf.random_normal([3,100],mean = 0, stddev = 1))
+    g = sess.run(G,feed_dict={z:tmp})
+    p1 = g[1,:,:,:].reshape([28,28])
+    plt.imshow(p1)
     print d
     #images = sess.run()
     plt.show()
