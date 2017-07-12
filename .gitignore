@@ -1,9 +1,6 @@
 *.pyc
 .DS_Store
-membackup/Y*
-saved_networks/*
-!saved_networks/placeholder
-savedQnetwork/*
-!savedQnetwork/placeholder
-summary/*
-!summary/placeholder
+TF_SAVE_DIR/*
+!TF_SAVE_DIR/placeholder
+PIC_SAVE_DIR/*
+!PIC_SAVE_DIR/placeholder
