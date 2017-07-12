@@ -76,25 +76,16 @@ def generator(z, zDim,reuseMark = None):
 class GAN:
     def __init__(self,sess,IMGsize,zSize,gLearningRate,dLearningRate):
         self.sess = sess
-
         self.zSize = zSize
         self.IMGsize = IMGsize
-        self.d = tf.placeholder(tf.float32,[None,IMGsize[0],IMGsize[1],IMGsize[2]])
 
+        self.d = tf.placeholder(tf.float32,[None,IMGsize[0],IMGsize[1],IMGsize[2]])
         self.batchSize = tf.placeholder(tf.int32)
         self.radomZ = tf.random_normal([self.batchSize,zSize],mean = 0,stddev= 1)
         self.D = discriminator(self.d,None)
         self.discriminatorVar = [i for i in tf.trainable_variables() if "discriminator" in i.name]
-
-        #for i in self.discriminatorVar:
-            #print i
-
-        #print "___________________"
         self.G = generator(self.radomZ,zSize)
         self.generatorVar = [i for i in tf.trainable_variables() if "generator" in i.name and "BatchNorm" not in i.name]
-        #print self.generatorVar
-        #for i in self.generatorVar:
-            #print i
         self.DG = discriminator(self.G,True)
 
         self.lossTrue = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.D, labels = tf.ones_like(self.D)))
@@ -102,7 +93,7 @@ class GAN:
         self.lossG = tf.reduce_sum(tf.nn.sigmoid_cross_entropy_with_logits(logits = self.DG, labels = tf.ones_like(self.DG)))
 
         self.dTrueOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossTrue, var_list = self.discriminatorVar)
-        #self.dFakeOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossFake, var_list = self.discriminatorVar)
+        self.dFakeOP = tf.train.AdamOptimizer(dLearningRate).minimize(self.lossFake, var_list = self.discriminatorVar)
         self.gOP = tf.train.AdamOptimizer(gLearningRate).minimize(self.lossG, var_list = self.generatorVar)
 
     def init(self):
