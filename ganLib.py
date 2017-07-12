@@ -21,7 +21,7 @@ def discriminator(image):
     wFC1 = weightVariable([3136,1024])
     bFC1 = biasVariable([1024])
 
-    wFC2 = weightVariable(1024,1)
+    wFC2 = weightVariable([1024,1])
     bFC2 = biasVariable([1])
 
     conv1 = tf.nn.conv2d(image, wConv1, strides = [1,1,1,1], padding = 'SAME') + bConv1
@@ -30,7 +30,7 @@ def discriminator(image):
     conv2 = tf.nn.conv2d(conv1, wConv2, strides = [1,1,1,1], padding = 'SAME') + bConv2
     conv2 = tf.nn.avg_pool(conv2, ksize = [1,2,2,1], strides = [1,2,2,1], padding = 'SAME')
 
-    fc1 = tf.reshape(conv2,[None,3136])
+    fc1 = tf.reshape(conv2,[-1,3136])
     fc1 = tf.matmul(fc1, wFC1) + bFC1
     fc1 = tf.nn.relu(fc1)
 
@@ -52,19 +52,20 @@ def generator(z,batchSize, zDim):
     bConv3 = biasVariable([1])
 
     fc1 = tf.matmul(z,wFC1) + bFC1
-    fc1 = tf.reshape(fc1,[None,56,56,1])
+    fc1 = tf.reshape(fc1,[-1,56,56,1])
     fc1 = tf.contrib.layers.batch_norm(fc1,epsilon = 1e-5)
-    fc1 = tf.relu(fc1)
+    fc1 = tf.nn.relu(fc1)
 
     conv1 = tf.nn.conv2d(fc1, wConv1, strides = [1,2,2,1], padding = 'SAME') + bConv1
-    conv1 = tf.contrib.layers.batch_norm(conv2,epsilon = 1e-5)
-    conv1 = tf.relu(conv1)
-    conv1 = tf.reshape(conv1,[None,56,56])
+    conv1 = tf.contrib.layers.batch_norm(conv1,epsilon = 1e-5)
+    conv1 = tf.nn.relu(conv1)
+    conv1 = tf.image.resize_images(conv1, [56, 56])#tf.reshape(conv1,[-1,56,56,-1])
+    print conv1.shape
 
     conv2 = tf.nn.conv2d(conv1, wConv2, strides = [1,2,2,1], padding = 'SAME') + bConv2
     conv2 = tf.contrib.layers.batch_norm(conv2,epsilon = 1e-5)
-    conv2 = tf.relu(conv2)
-    conv2 = tf.reshape(conv2, [None,56,56])
+    conv2 = tf.nn.relu(conv2)
+    conv2 = tf.reshape(conv2, [-1,56,56])
 
     conv3 = tf.nn.conv2d(conv2, wConv3, strides = [1,2,2,1], padding = 'SAME') + bConv3
     conv3 = tf.sigmoid(conv3)
@@ -73,11 +74,16 @@ def generator(z,batchSize, zDim):
 
 if __name__ == "__main__":
     mnist = input_data.read_data_sets("MNIST/")
-    image = mnist.train.next_batch(1)[0].reshape([28,28])
-    plt.imshow(image)
+    image = mnist.train.next_batch(1)[0].reshape([1,28,28,1])
+    #print image.shape
+    z = tf.placeholder(tf.float32,[None,100])
     #G = generator(z,3,100)
-    #D = discriminator()
+    img = tf.placeholder(tf.float32,[None,28,28,1])
+    D = discriminator(img)
     sess = tf.InteractiveSession()
+    sess.run(tf.global_variables_initializer())
+    d = sess.run(D,feed_dict={img:image})
+    print d
     #images = sess.run()
     plt.show()
     while True:
