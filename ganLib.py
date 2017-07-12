@@ -38,7 +38,7 @@ def discriminator(image):
 
     return fc2
 
-def generator(z,batchSize, zDim):
+def generator(z, zDim):
     wFC1 = weightVariable([zDim, 3136])
     bFC1 = biasVariable([3136])
 
@@ -78,12 +78,13 @@ if __name__ == "__main__":
     image = mnist.train.next_batch(1)[0].reshape([1,28,28,1])
     #print image.shape
     z = tf.placeholder(tf.float32,[None,100])
-    G = generator(z,3,100)
+    G = generator(z,100)
     img = tf.placeholder(tf.float32,[None,28,28,1])
     D = discriminator(img)
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
     d = sess.run(D,feed_dict={img:image})
+    #g = sess.run(G,feed_dict={z:tf.random_normal([3,100])})
     print d
     #images = sess.run()
     plt.show()
