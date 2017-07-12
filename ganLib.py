@@ -73,20 +73,36 @@ def generator(z, zDim):
 
     return conv3
 
+class GAN:
+    def __init__(self,sess,IMGsize,zSize):
+        self.sess = sess
+        self.d = tf.placeholder(tf.float32,[None,IMGsize[0],IMGsize[1],IMGsize[2]])
+        self.z = tf.placeholder(tf.float32,[None,zSize])
+        self.D = discriminator(self.d)
+        self.discriminatorVar = tf.trainable_variables()
+        self.G = generator(self.z,zSize)
+        self.generatorVar = tf.trainable_variables()[len(self.discriminatorVar):]
+
+    def init(self):
+        self.sess.run(tf.global_variables_initializer())
+
+    def discriminator(self,data):
+        return self.sess.run(self.D,feed_dict={self.d:data})
+
+    def generator(self,sample):
+        return self.sess.run(self.G,feed_dict={self.z:sample})
+
 if __name__ == "__main__":
     mnist = input_data.read_data_sets("MNIST/")
     image = mnist.train.next_batch(1)[0].reshape([1,28,28,1])
     #print image.shape
-    z = tf.placeholder(tf.float32,[None,100])
-    G = generator(z,100)
-    img = tf.placeholder(tf.float32,[None,28,28,1])
-    D = discriminator(img)
     sess = tf.InteractiveSession()
-    sess.run(tf.global_variables_initializer())
-    d = sess.run(D,feed_dict={img:image})
-    tmp = sess.run(tf.random_normal([3,100],mean = 0, stddev = 1))
-    g = sess.run(G,feed_dict={z:tmp})
-    p1 = g[1,:,:,:].reshape([28,28])
+    gan = GAN(sess,[28,28,1],100)
+    gan.init()
+    d = gan.discriminator(image)
+    tmp = sess.run(tf.random_normal([1,100],mean = 0,stddev = 1))
+    g = gan.generator(tmp)
+    p1 = g[0,:,:,:].reshape([28,28])
     plt.imshow(p1)
     print d
     #images = sess.run()
