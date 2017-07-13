@@ -21,6 +21,7 @@ TF_SAVE_DIR = './TF_SAVE_DIR/'
 PIC_SAVE_DIR = './PIC_SAVE/'
 SUMMARY_DIR = './summary/'
 SAVE_PER_STEP = 20
+SUMMARY_PER_STEP = 4
 SAMPLE_NUM = 3
 
 def main():
@@ -57,6 +58,10 @@ def main():
             saver.save(sess, TF_SAVE_DIR + '-gan', global_step = t)
             print("Saved")
 
+        if WRITE_SUMMARY and t % SUMMARY_PER_STEP == 0:
+            summary = sess.run(merged,feed_dict={gan.d:realDate,gan.batchSize:BATCH_SIZE})
+            writer.add_summary(summary,t)
+
     state = 'train'
     for i in xrange(TRIAN_TIMES):
         t+=1
@@ -65,7 +70,7 @@ def main():
         gan.trainG(BATCH_SIZE)
         print("TimeStep",t,"/ State",state)
 
-        if WRITE_SUMMARY:
+        if WRITE_SUMMARY and t % SUMMARY_PER_STEP == 0:
             summary = sess.run(merged,feed_dict={gan.d:realDate,gan.batchSize:BATCH_SIZE})
             writer.add_summary(summary,t)
 
