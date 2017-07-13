@@ -19,7 +19,7 @@ BATCH_SIZE = 50
 
 TF_SAVE_DIR = './TF_SAVE_DIR/'
 PIC_SAVE_DIR = './PIC_SAVE/'
-SUMMARY_DIR = './summmary/'
+SUMMARY_DIR = './summary/'
 SAVE_PER_STEP = 20
 SAMPLE_NUM = 3
 
