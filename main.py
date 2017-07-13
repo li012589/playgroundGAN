@@ -6,14 +6,14 @@ from tensorflow.examples.tutorials.mnist import input_data
 from ganLib import GAN
 
 WRITE_SUMMARY = True
-WRITE_PIC = True
+WRITE_PIC = False
 
 IMG_SIZE = [28,28,1]
 Z_SIZE = 100
 G_LEARNING_RATE = 0.0001
 D_LEARNING_RATE = 0.0003
 
-PRE_TRAIN_D = 300
+PRE_TRAIN_D = 3000
 TRIAN_TIMES = 1000000
 BATCH_SIZE = 50
 
