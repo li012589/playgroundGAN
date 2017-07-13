@@ -19,6 +19,7 @@ BATCH_SIZE = 50
 
 TF_SAVE_DIR = './TF_SAVE_DIR/'
 PIC_SAVE_DIR = './PIC_SAVE/'
+SUMMARY_DIR = './summmary/'
 SAVE_PER_STEP = 20
 SAMPLE_NUM = 3
 
@@ -34,7 +35,7 @@ def main():
         sampleIMG = gan.generator(SAMPLE_NUM)
         tf.summary.image("Samples",sampleIMG)
         merged = tf.summary.merge_all()
-        writer = tf.summary.FileWriter(TF_SAVE_DIR, sess.graph)
+        writer = tf.summary.FileWriter(SUMMARY_DIR, sess.graph)
 
     saver = tf.train.Saver()
     checkpoint = tf.train.get_checkpoint_state(TF_SAVE_DIR)
