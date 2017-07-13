@@ -19,8 +19,8 @@ BATCH_SIZE = 50
 
 TF_SAVE_DIR = './TF_SAVE_DIR/'
 PIC_SAVE_DIR = './PIC_SAVE/'
-SAVE_PER_STEP = 2
-SAMPLE_NUM = 6
+SAVE_PER_STEP = 20
+SAMPLE_NUM = 3
 
 def main():
     mnist = input_data.read_data_sets("MNIST/")
