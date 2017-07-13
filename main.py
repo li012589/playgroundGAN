@@ -61,6 +61,7 @@ def main():
     for i in xrange(TRIAN_TIMES):
         t+=1
         realDate = mnist.train.next_batch(BATCH_SIZE)[0].reshape([BATCH_SIZE,IMG_SIZE[0],IMG_SIZE[1],IMG_SIZE[2]])
+        gan.trainD(realDate,BATCH_SIZE)
         gan.trainG(BATCH_SIZE)
         print("TimeStep",t,"/ State",state)
 
