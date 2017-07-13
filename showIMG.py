@@ -11,6 +11,8 @@ G_LEARNING_RATE = 0.0001
 D_LEARNING_RATE = 0.0003
 
 SAMPLE_NUM = 6
+TF_SAVE_DIR = './TF_SAVE_DIR/'
+PIC_SAVE_DIR = './PIC_SAVE/'
 
 def main():
     sess = tf.InteractiveSession()
