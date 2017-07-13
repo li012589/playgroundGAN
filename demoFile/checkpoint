@@ -1,0 +1,6 @@
+model_checkpoint_path: "-gan-101600"
+all_model_checkpoint_paths: "-gan-101520"
+all_model_checkpoint_paths: "-gan-101540"
+all_model_checkpoint_paths: "-gan-101560"
+all_model_checkpoint_paths: "-gan-101580"
+all_model_checkpoint_paths: "-gan-101600"
