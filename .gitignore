@@ -2,5 +2,5 @@
 .DS_Store
 TF_SAVE_DIR/*
 !TF_SAVE_DIR/placeholder
-PIC_SAVE_DIR/*
-!PIC_SAVE_DIR/placeholder
+PIC_SAVE/*
+!PIC_SAVE/placeholder
